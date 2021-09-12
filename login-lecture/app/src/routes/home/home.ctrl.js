@@ -1,7 +1,4 @@
-const users = {
-    id: ['kim', 'lee', 'park'],
-    psword: ['qwerty', '123456', '가나다라']
-};
+const User = require('../../models/User');
 
 const views = {
     home: function(req, res){
@@ -10,28 +7,23 @@ const views = {
 
     login: function(req, res){
         res.render('./home/login');
+    },
+    register: function(req, res){
+        res.render('./home/register');
     }
 };
 
 const process = {
-    login: function(req, res){
-        const id = req.body.id;
-        const psword = req.body.psword;
-
-        if(users.id.includes(id)){
-            const index = users.id.indexOf(id);
-            if(users.psword[index] === psword){
-                return res.json({
-                    success: true
-                });
-            }
-        }
-        return res.json({
-            success: false,
-            msg: '로그인 실패.'
-        });
+    login: async function(req, res){
+        const user = new User(req.body);
+        const response = await user.login();
+        return res.json(response);
+    },
+    register: async function(req, res){
+        const user = new User(req.body);
+        const response = await user.register();
+        return res.json(response);
     }
-
     
 };
 
